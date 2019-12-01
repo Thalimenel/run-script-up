@@ -4,6 +4,11 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = fs.promises;
 
+
+/**
+ * 
+ * @param {!string} path 
+ */
 const getPackageJson = async (path = 'package.json') => {
     try {
         return JSON.parse(await fsPromises.readFile(path, { encoding: 'utf8' }));
@@ -13,11 +18,21 @@ const getPackageJson = async (path = 'package.json') => {
     }
 }
 
+/**
+ * 
+ * @param {!string} runScriptName 
+ */
 const errorLog = (str) => {
     console.log('\x1b[31m%s\x1b[0m', str);
 }
 
-
+/**
+ * 
+ * @param {!string} runScriptName 
+ */
+const consoleNoPackageJSONError =(runScriptName)=>{
+    errorLog(`Error: No package.json with script ${runScriptName}  up the folders tree from ${process.cwd()}!`);
+}
 
 
 if (process.argv.length < 3) {
@@ -33,7 +48,7 @@ let runScriptName = process.argv[2];
     if (packageJSONObject) {
         let { scripts } = packageJSONObject;
         if (scripts && scripts[runScriptName]) {
-            child_process.execSync('npm run hatul', { stdio: [0, 1, 2] });
+            child_process.execSync(`npm run ${runScriptName}`, { stdio: [0, 1, 2] });
         }
         else {
             let currentWorkFolder = process.cwd();
@@ -50,12 +65,12 @@ let runScriptName = process.argv[2];
                 currentWorkFolder = parentFolder;
                 parentFolder = path.dirname(currentWorkFolder);
             }
-            errorLog(`Error: No package.json with script ${runScriptName} up the folders tree from ${process.cwd()}!`);
+            consoleNoPackageJSONError(runScriptName);
         }
     }
     else {
         //no need to run up the tree because npm tries to get package json up the tree itself.
-        errorLog(`Error: No package.json with script ${runScriptName}  up the folders tree from ${process.cwd()}!`);
+        consoleNoPackageJSONError(runScriptName);
     }
 
 })();
