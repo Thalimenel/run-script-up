@@ -9,7 +9,6 @@ const getPackageJson = async (path = 'package.json') => {
         return JSON.parse(await fsPromises.readFile(path, { encoding: 'utf8' }));
     }
     catch (err) {
-        console.log(err);
         return null;
     }
 }
@@ -51,12 +50,12 @@ let runScriptName = process.argv[2];
                 currentWorkFolder = parentFolder;
                 parentFolder = path.dirname(currentWorkFolder);
             }
-            errorLog(`Error: No package.json up the folders tree from ${process.cwd()}!`);
+            errorLog(`Error: No package.json with script ${runScriptName} up the folders tree from ${process.cwd()}!`);
         }
     }
     else {
         //no need to run up the tree because npm tries to get package json up the tree itself.
-        errorLog(`Error: No package.json up the folders tree from ${process.cwd()}!`);
+        errorLog(`Error: No package.json with script ${runScriptName}  up the folders tree from ${process.cwd()}!`);
     }
 
 })();
