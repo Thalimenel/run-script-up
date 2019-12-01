@@ -1,0 +1,22 @@
+{
+  "name": "run-script-up",
+  "version": "1.0.0",
+  "description": "Runs script if exists and goes up the folder tree until it finds it.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thalimenel/run-script-up.git"
+  },
+  "author": "Pavel Gershanik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Thalimenel/run-script-up/issues"
+  },
+  "homepage": "https://github.com/Thalimenel/run-script-up#readme",
+  "bin": {
+    "run-script-up": "./index.js"
+  }
+}
