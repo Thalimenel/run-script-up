@@ -1,6 +1,6 @@
 {
   "name": "run-script-up",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Runs script if exists and goes up the folder tree until it finds it.",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,15 @@
   "homepage": "https://github.com/Thalimenel/run-script-up#readme",
   "bin": {
     "run-script-up": "./index.js"
-  }
+  },
+  "keywords": [
+    "script",
+    "run",
+    "folder",
+    "tree",
+    "up",
+    "package.json",
+    "npm run",
+    "search"
+  ]
 }
