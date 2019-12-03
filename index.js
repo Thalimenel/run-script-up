@@ -30,17 +30,19 @@ const errorLog = (str) => {
  * 
  * @param {!string} runScriptName 
  */
-const consoleNoPackageJSONError =(runScriptName)=>{
+const consoleNoPackageJSONError = (runScriptName) => {
     errorLog(`Error: No package.json with script ${runScriptName}  up the folders tree from ${process.cwd()}!`);
 }
 
-
-if (process.argv.length < 3) {
+const { argv } = process;
+if (argv.length < 3) {
     errorLog("Error: no script selected!");
     return 1;
 }
 
-let runScriptName = process.argv[2];
+let runScriptName = argv[2];
+let finalScriptToRun = `npm run ${runScriptName} ${argv.length > 3 ? argv.slice(3).join(' ') : ''}`;
+
 
 (async () => {
     //first run
@@ -48,7 +50,7 @@ let runScriptName = process.argv[2];
     if (packageJSONObject) {
         let { scripts } = packageJSONObject;
         if (scripts && scripts[runScriptName]) {
-            child_process.execSync(`npm run ${runScriptName}`, { stdio: [0, 1, 2] });
+            child_process.execSync(finalScriptToRun, { stdio: [0, 1, 2] });
         }
         else {
             let currentWorkFolder = process.cwd();
@@ -58,7 +60,7 @@ let runScriptName = process.argv[2];
                 if (packageJSONObject) {
                     let { scripts } = packageJSONObject;
                     if (scripts && scripts[runScriptName]) {
-                        child_process.execSync(`npm run ${runScriptName}`, { stdio: [0, 1, 2], cwd: parentFolder });
+                        child_process.execSync(finalScriptToRun, { stdio: [0, 1, 2], cwd: parentFolder });
                         return 0;
                     }
                 }
