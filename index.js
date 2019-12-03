@@ -3,7 +3,7 @@ const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = fs.promises;
-
+const CWD = process.cwd();
 
 /**
  * 
@@ -31,7 +31,7 @@ const errorLog = (str) => {
  * @param {!string} runScriptName 
  */
 const consoleNoPackageJSONError = (runScriptName) => {
-    errorLog(`Error: No package.json with script ${runScriptName}  up the folders tree from ${process.cwd()}!`);
+    errorLog(`Error: No package.json with script ${runScriptName}  up the folders tree from ${CWD}!`);
 }
 
 const { argv } = process;
@@ -49,11 +49,12 @@ let finalScriptToRun = `npm run ${runScriptName} ${argv.length > 3 ? argv.slice(
     let packageJSONObject = await getPackageJson();
     if (packageJSONObject) {
         let { scripts } = packageJSONObject;
+        process.env.orig_cwd = CWD;
         if (scripts && scripts[runScriptName]) {
             child_process.execSync(finalScriptToRun, { stdio: [0, 1, 2] });
         }
         else {
-            let currentWorkFolder = process.cwd();
+            let currentWorkFolder = CWD;
             let parentFolder = path.dirname(currentWorkFolder);
             while (parentFolder != currentWorkFolder) {
                 packageJSONObject = await getPackageJson(`${parentFolder}\\package.json`);
