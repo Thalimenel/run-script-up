@@ -46,6 +46,7 @@ let finalScriptToRun = `npm run ${runScriptName} ${argv.length > 3 ? argv.slice(
 
 (async () => {
     let currentWorkFolder = CWD;
+    process.env.orig_cwd = CWD;
     let parentFolder = path.dirname(currentWorkFolder);
     while (parentFolder != currentWorkFolder) {
         let packageJSONObject = await getPackageJson(`${parentFolder}\\package.json`);
