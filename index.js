@@ -45,35 +45,19 @@ let finalScriptToRun = `npm run ${runScriptName} ${argv.length > 3 ? argv.slice(
 
 
 (async () => {
-    //first run
-    let packageJSONObject = await getPackageJson();
-    if (packageJSONObject) {
-        let { scripts } = packageJSONObject;
-        process.env.orig_cwd = CWD;
-        if (scripts && scripts[runScriptName]) {
-            child_process.execSync(finalScriptToRun, { stdio: [0, 1, 2] });
-        }
-        else {
-            let currentWorkFolder = CWD;
-            let parentFolder = path.dirname(currentWorkFolder);
-            while (parentFolder != currentWorkFolder) {
-                packageJSONObject = await getPackageJson(`${parentFolder}\\package.json`);
-                if (packageJSONObject) {
-                    let { scripts } = packageJSONObject;
-                    if (scripts && scripts[runScriptName]) {
-                        child_process.execSync(finalScriptToRun, { stdio: [0, 1, 2], cwd: parentFolder });
-                        return 0;
-                    }
-                }
-                currentWorkFolder = parentFolder;
-                parentFolder = path.dirname(currentWorkFolder);
+    let currentWorkFolder = CWD;
+    let parentFolder = path.dirname(currentWorkFolder);
+    while (parentFolder != currentWorkFolder) {
+        let packageJSONObject = await getPackageJson(`${parentFolder}\\package.json`);
+        if (packageJSONObject) {
+            let { scripts } = packageJSONObject;
+            if (scripts && scripts[runScriptName]) {
+                child_process.execSync(finalScriptToRun, { stdio: [0, 1, 2], cwd: parentFolder });
+                return 0;
             }
-            consoleNoPackageJSONError(runScriptName);
         }
+        currentWorkFolder = parentFolder;
+        parentFolder = path.dirname(currentWorkFolder);
     }
-    else {
-        //no need to run up the tree because npm tries to get package json up the tree itself.
-        consoleNoPackageJSONError(runScriptName);
-    }
-
+    consoleNoPackageJSONError(runScriptName);
 })();
