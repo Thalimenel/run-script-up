@@ -49,7 +49,7 @@ let finalScriptToRun = `npm run ${runScriptName} ${argv.length > 3 ? argv.slice(
     process.env.orig_cwd = CWD;
     let parentFolder = path.dirname(currentWorkFolder);
     while (parentFolder != currentWorkFolder) {
-        let packageJSONObject = await getPackageJson(`${currentWorkFolder}\\package.json`);
+        let packageJSONObject = await getPackageJson(`${currentWorkFolder}${path.sep}package.json`);
         if (packageJSONObject) {
             let { scripts } = packageJSONObject;
             if (scripts && scripts[runScriptName]) {
